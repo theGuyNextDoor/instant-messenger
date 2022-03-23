@@ -1,20 +1,19 @@
-import React from 'react';
-import { Grid, Typography, TextField, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Grid, Typography, TextField, Button, Link } from '@mui/material';
 import { useLogin } from '../context/LoginManager.jsx';
 
 function SignIn() {
-  const { signInInfo, handleSignInCredentials, resetSignInCredentials } = useLogin();
+  const [errMsg, setErrMsg] = useState('');
+  const { signInInfo, handleSignInCredentials, resetSignInCredentials, stageUser } = useLogin();
 
   const loginUser = () => {
     fetch(`/api/sign-in/${signInInfo.email}/${signInInfo.password}`)
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        // NAVIGATE TO CHATS
+        stageUser(data);
       })
       .catch((err) => console.log(err));
+    resetSignInCredentials();
   };
 
   return (
@@ -46,6 +45,11 @@ function SignIn() {
       </Grid>
       <Grid item xs={12}>
         <Button onClick={loginUser}>Login</Button>
+      </Grid>
+
+      <Grid item xs={12}>
+        <Typography component="span">Don&#39;t have an account?</Typography>
+        <Link href="/sign-up"> SIGN UP</Link>
       </Grid>
 
     </Grid>

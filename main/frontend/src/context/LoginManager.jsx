@@ -5,8 +5,9 @@ const LoginContext = createContext();
 export const useLogin = () => useContext(LoginContext);
 
 export function LoginProvider({ children }) {
-  const [signUpInfo, setSignUpInfo] = useState({ firstName: '', lastName: '', email: '', password: '' });
+  const [signUpInfo, setSignUpInfo] = useState({ username: '', firstName: '', lastName: '', email: '', password: '' });
   const [signInInfo, setSignInInfo] = useState({ email: '', password: '' });
+  const [user, setUser] = useState({ online: false });
 
   const handleSignUpCredentials = (e) => {
     const { name, value } = e.target;
@@ -15,7 +16,7 @@ export function LoginProvider({ children }) {
   };
 
   const resetSignUpCredentials = () => {
-    setSignUpInfo({ firstName: '', lastName: '', email: '', password: '' });
+    setSignUpInfo({ username: '', firstName: '', lastName: '', email: '', password: '' });
   };
 
   const handleSignInCredentials = (e) => {
@@ -28,6 +29,14 @@ export function LoginProvider({ children }) {
     setSignInInfo({ email: '', password: '' });
   };
 
+  const stageUser = (obj) => {
+    setUser(obj);
+  };
+
+  const unstageUser = () => {
+    setUser({ online: false });
+  };
+
   return (
     <LoginContext.Provider value={{
       signUpInfo,
@@ -37,6 +46,10 @@ export function LoginProvider({ children }) {
       signInInfo,
       handleSignInCredentials,
       resetSignInCredentials,
+
+      user,
+      stageUser,
+      unstageUser,
     }}>
       {children}
     </LoginContext.Provider>
