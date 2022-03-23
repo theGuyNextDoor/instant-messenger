@@ -1,18 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid, Typography, TextField, Button } from '@mui/material';
+import { useLogin } from '../context/LoginManager.jsx';
 
-function Login() {
-  const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
-
-  const handleChangeLogin = (e) => {
-    const { name } = e.target;
-    const { value } = e.target;
-
-    setLoginInfo({ ...loginInfo, [name]: value });
-  };
+function SignIn() {
+  const { signInInfo, handleSignInCredentials, resetSignInCredentials } = useLogin();
 
   const loginUser = () => {
-    fetch('/api/login')
+    fetch('/api/sign-in')
       .then((respones) => console.log(respones));
   };
 
@@ -27,20 +21,20 @@ function Login() {
       <Grid item xs={12}>
         <TextField
           name="email"
-          label="email"
+          label="Email"
           variant="outlined"
-          value={loginInfo.email}
-          onChange={handleChangeLogin}
+          value={signInCredentials.email}
+          onChange={handleSignInCredentials}
         />
       </Grid>
 
       <Grid item xs={12}>
         <TextField
           name="password"
-          label="password"
+          label="Password"
           variant="outlined"
-          value={loginInfo.password}
-          onChange={handleChangeLogin}
+          value={signInCredentials.password}
+          onChange={handleSignInCredentials}
         />
       </Grid>
       <Grid item xs={12}>
@@ -51,4 +45,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignIn;

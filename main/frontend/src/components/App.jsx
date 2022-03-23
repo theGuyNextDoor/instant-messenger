@@ -1,10 +1,11 @@
 import React from 'react';
-import Login from './Login.jsx';
+import SignIn from './SignIn.jsx';
+import SignUp from './SignUp.jsx';
 
 function App() {
   return (
     <div>
-      <Login />
+      <SignUp />
     </div>
   );
 }
