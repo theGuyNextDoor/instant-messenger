@@ -5,7 +5,7 @@ import SignUp from './SignUp.jsx';
 function App() {
   return (
     <div>
-      <SignUp />
+      <SignIn />
     </div>
   );
 }

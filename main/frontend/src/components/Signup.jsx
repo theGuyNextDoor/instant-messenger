@@ -22,6 +22,7 @@ function SignUp() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        // NAVIGATE TO MESSAGES
       })
       .catch((err) => {
         console.log(err); // DELETE ME

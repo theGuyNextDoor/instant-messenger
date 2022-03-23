@@ -6,8 +6,15 @@ function SignIn() {
   const { signInInfo, handleSignInCredentials, resetSignInCredentials } = useLogin();
 
   const loginUser = () => {
-    fetch('/api/sign-in')
-      .then((respones) => console.log(respones));
+    fetch(`/api/sign-in/${signInInfo.email}/${signInInfo.password}`)
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        // NAVIGATE TO CHATS
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -23,7 +30,7 @@ function SignIn() {
           name="email"
           label="Email"
           variant="outlined"
-          value={signInCredentials.email}
+          value={signInInfo.email}
           onChange={handleSignInCredentials}
         />
       </Grid>
@@ -33,7 +40,7 @@ function SignIn() {
           name="password"
           label="Password"
           variant="outlined"
-          value={signInCredentials.password}
+          value={signInInfo.password}
           onChange={handleSignInCredentials}
         />
       </Grid>

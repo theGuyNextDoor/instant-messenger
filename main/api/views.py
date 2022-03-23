@@ -1,10 +1,9 @@
-from urllib import response
 from django import http
 from django.shortcuts import render
 from rest_framework import generics, views, status
 from rest_framework.response import Response
 from .models import User
-from .serializers import UserSerializer
+from .serializers import LoginSerializer, UserSerializer
 import json
 
 # Create your views here.
@@ -27,13 +26,17 @@ class CreateUser(views.APIView):
       user = User(first_name=first, last_name=last, email=email, password=pw)
       user.save()
 
-      return Response({'Success': 'Account created'}, status=status.HTTP_201_CREATED)
-    return Response({'Error': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
+      return Response({'success': 'Account created'}, status=status.HTTP_201_CREATED)
+    return Response({'error': 'This email is already being used'}, status=status.HTTP_400_BAD_REQUEST)
 
 class SignInUser(views.APIView):
-  pass
+
+  def get(self, request, email, password, format=None):
+    user_results = User.objects.filter(email=email, password=password)
+
+    if user_results.exists():
+      first_name = user_results[0].first_name
+      last_name = user_results[0].first_name
+
+      return Response({ 'first_name': first_name, 'last_name': last_name, 'email': email }, status=status.HTTP_200_OK)
+    return Response({ 'error': 'Incorrect email or password' }, status=status.HTTP_401_UNAUTHORIZED)
