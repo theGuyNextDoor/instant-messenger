@@ -1,15 +1,18 @@
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Box, Typography } from '@mui/material';
 
 function MessageCenter() {
   return (
-    <Grid container align="center">
-
-      <Grid item xs={12}>
-        <Typography variant="h3" component="h3">Messages</Typography>
-      </Grid>
-
-    </Grid>
+    <Box
+      sx={{
+        alignItems: 'center',
+        width: '30%',
+        height: '70%',
+        backgroundColor: 'gray',
+      }}
+    >
+      <Typography variant="h5" component="h5">Messages</Typography>
+    </Box>
   );
 }
 

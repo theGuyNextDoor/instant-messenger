@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
-import { Grid, Typography, TextField, Button, Link } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Grid, Typography, TextField, Button, Link, Alert } from '@mui/material';
 import { useLogin } from '../context/LoginManager.jsx';
 
 function SignIn() {
   const [errMsg, setErrMsg] = useState('');
   const { signInInfo, handleSignInCredentials, resetSignInCredentials, stageUser } = useLogin();
+
+  useEffect(() => {
+    fetch('/api/current-session')
+      .then((response) => response.json())
+      .then((data) => {
+        if (Object.keys(data).length === 1) {
+          console.log(data.message);
+        } else {
+          stageUser(data);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const loginUser = () => {
     fetch(`/api/sign-in/${signInInfo.email}/${signInInfo.password}`)
@@ -12,12 +25,13 @@ function SignIn() {
       .then((data) => {
         stageUser(data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => Alert(err));
     resetSignInCredentials();
   };
 
   return (
-    <Grid container align="center">
+
+    <Grid container align="center" style={{ border: 'solid', borderColor: 'red' }}>
       <Grid item xs={12}>
         <Typography variant="h4" component="h4">
           Login
@@ -25,26 +39,35 @@ function SignIn() {
       </Grid>
 
       <Grid item xs={12}>
-        <TextField
-          name="email"
-          label="Email"
-          variant="outlined"
-          value={signInInfo.email}
-          onChange={handleSignInCredentials}
-        />
-      </Grid>
+        <form onSubmit={loginUser}>
+          <Grid item xs={12}>
+            <Grid item xs={12}>
+              <TextField
+                required
+                type="email"
+                name="email"
+                label="Email"
+                value={signInInfo.email}
+                onChange={handleSignInCredentials}
+              />
+            </Grid>
 
-      <Grid item xs={12}>
-        <TextField
-          name="password"
-          label="Password"
-          variant="outlined"
-          value={signInInfo.password}
-          onChange={handleSignInCredentials}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Button onClick={loginUser}>Login</Button>
+            <Grid item>
+              <TextField
+                required
+                type="password"
+                name="password"
+                label="Password"
+                value={signInInfo.password}
+                onChange={handleSignInCredentials}
+              />
+            </Grid>
+
+            <Grid item>
+              <Button type="submit">Login</Button>
+            </Grid>
+          </Grid>
+        </form>
       </Grid>
 
       <Grid item xs={12}>
