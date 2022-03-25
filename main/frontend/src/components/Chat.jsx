@@ -32,7 +32,7 @@ function Chat() {
       <Card
         key={id}
         variant="outlined"
-        onClick={() => runNavigate(`/chat/${id}`)}
+        onClick={() => runNavigate(`/messages/${id}`)}
         sx={{
           height: 60,
           marginBottom: 3,
