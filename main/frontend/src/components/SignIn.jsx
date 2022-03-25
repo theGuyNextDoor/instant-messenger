@@ -17,7 +17,7 @@ function SignIn({ signIn }) {
         item
         container
         direction="column"
-        spacing={1}
+        rowSpacing={1}
         component="form"
         onSubmit={signIn}
       >

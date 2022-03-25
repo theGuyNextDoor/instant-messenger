@@ -94,8 +94,7 @@ function Login({ title }) {
       container
       align="center"
       direction="column"
-      spacing={2}
-      border="solid"
+      rowSpacing={2}
     >
       <Grid item>
         <Typography variant="h4" component="h4">
