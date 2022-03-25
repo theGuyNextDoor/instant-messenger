@@ -1,57 +1,62 @@
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Grid, Typography, Button } from '@mui/material';
+import { useUser } from '../context/UserManager.jsx';
+import { useLogin } from '../context/LoginManager.jsx';
 import Chat from './Chat.jsx';
 import Messages from './Messages.jsx';
 
 function MessageCenter({ title }) {
+  const UserManager = useUser();
+  const LoginManager = useLogin();
+
   const logout = () => {
-    console.log('logged out');
+    const options = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: UserManager.user.id,
+        online: false,
+      }),
+    };
+
+    fetch('/api/logout', options)
+      .then((response) => {
+        if (response.ok) {
+          UserManager.stageUser({});
+          LoginManager.authenticate(false);
+        } else {
+          console.log('User not found'); // ALERT MESSAGE
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
-    <Box
-      component="div"
-      // border="solid"
+    <Grid
+      container
+      direction="column"
+      style={{ height: '100%' }}
 
-      sx={{
-        // display: 'flex',
-        // justifyContent: 'center',
-        // alognItems: 'center',
-        width: '100%',
-        height: '100%',
-      }}
+      border="solid"
     >
-      <Box
-        border="solid"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alognItems: 'center',
-          width: '100%',
-          height: '100%',
-        }}
-      >
+      <Grid item align="right">
         <Button onClick={logout}>Logout</Button>
+      </Grid>
 
-        <Box
-          sx={{
-            paddingLeft: 2,
-            paddingTop: 2,
-            paddingRight: 2,
-            width: '50%',
-            height: '80%',
-            backgroundColor: 'gray',
-          }}
-        >
-          <Box sx={{ height: '100%' }}>
-            <Typography align="center" variant="h5" component="h5">{title}</Typography>
-            {(title === 'chat') && <Chat />}
-            {(title === 'messages') && <Messages />}
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+      <Grid
+        item
+        container
+        direction="column"
+        border="solid"
+      >
+        <Grid item>
+          <Typography align="center" variant="h5" component="h5">{title}</Typography>
+        </Grid>
+
+        {(title === 'chat') && <Chat />}
+        {(title === 'messages') && <Messages />}
+      </Grid>
+    </Grid>
   );
 }
 

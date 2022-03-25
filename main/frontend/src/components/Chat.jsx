@@ -23,14 +23,6 @@ function Chat() {
         key={id}
         variant="outlined"
         onClick={() => runNavigate(`/chat/${id}`)}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 50,
-          paddingLeft: 10,
-          paddingRight: 10,
-          marginBottom: 10,
-        }}
       >
         <Typography>{rcpt}</Typography>
       </Card>
@@ -38,10 +30,7 @@ function Chat() {
   });
 
   return (
-    <Box sx={{
-      flex: 1,
-    }}
-    >
+    <Box>
       {recipients}
     </Box>
   );

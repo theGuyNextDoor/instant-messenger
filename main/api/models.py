@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-  key = models.CharField(max_length=50, unique=True, null=True)
+  session_key = models.CharField(max_length=50, unique=True, null=True)
   username = models.CharField(max_length=30)
   first_name = models.CharField(max_length=20)
   last_name = models.CharField(max_length=20)
