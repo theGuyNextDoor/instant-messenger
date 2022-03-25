@@ -5,7 +5,7 @@ app_name = 'frontend'
 
 urlpatterns = [
   path('', index, name='home'),
-  path('lobby', index, name='lobby'),
   path('sign-up', index, name='signup'),
-  path('chat/<str:id>', index, name='chat'),
+  path('chat', index, name='chat'),
+  path('messages/<str:id>', index, name='messges'),
 ]

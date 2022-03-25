@@ -1,41 +1,28 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'
 import { Box, Card, Typography } from '@mui/material';
 
 const data = [
-  { id: 1, sender: 'tim', text: 'hello' },
-  { id: 2, sender: 'other', text: 'hey there' },
-  { id: 3, sender: 'tim', text: 'another message' },
-  { id: 4, sender: 'other', text: 'back at you' },
+  { id: 1, rcpt: 'bigtim' },
+  { id: 2, rcpt: 'someone' },
+  { id: 3, rcpt: 'someone else' },
 ];
 
-function Chat({ runNavigate }) {
-  const messages = data.map((msg) => {
-    const { id, sender, text } = msg;
-    if (sender === 'tim') {
-      return (
-        <Box border="solid">
-          <Card
-            key={id}
-            variant="outlined"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              height: 50,
-              paddingLeft: 10,
-              paddingRight: 10,
-              marginBottom: 10,
-            }}
-          >
-            <Typography>{text}</Typography>
-          </Card>
-        </Box>
-      );
-    }
+function Chat() {
+  const navigate = useNavigate();
+
+  const runNavigate = (path) => {
+    navigate(path);
+  };
+
+  const recipients = data.map((recipient) => {
+    const { id, rcpt } = recipient;
+
     return (
       <Card
         key={id}
         variant="outlined"
+        onClick={() => runNavigate(`/chat/${id}`)}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -45,7 +32,7 @@ function Chat({ runNavigate }) {
           marginBottom: 10,
         }}
       >
-        <Typography>{text}</Typography>
+        <Typography>{rcpt}</Typography>
       </Card>
     );
   });
@@ -55,7 +42,7 @@ function Chat({ runNavigate }) {
       flex: 1,
     }}
     >
-      {messages}
+      {recipients}
     </Box>
   );
 }

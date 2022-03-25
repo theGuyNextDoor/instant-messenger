@@ -29,7 +29,7 @@ function Login({ title }) {
         if (Object.keys(data).length > 1) {
           UserManager.stageUser(data);
           authenticate(true);
-          runNavigate('/lobby');
+          runNavigate('/chat');
         }
       })
       .catch((err) => console.log(err));
@@ -45,7 +45,7 @@ function Login({ title }) {
         } else {
           UserManager.stageUser(data);
           authenticate(true);
-          runNavigate('/lobby');
+          runNavigate('/chat');
         }
       })
       .catch((err) => console.log(err));
@@ -78,7 +78,7 @@ function Login({ title }) {
             email: signUpInfo.email,
             online: true,
           });
-          runNavigate('/lobby');
+          runNavigate('/chat');
         } else {
           console.log(data.err); // ALERT MESSAGE
         }

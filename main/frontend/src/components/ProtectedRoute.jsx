@@ -23,7 +23,7 @@ export function PublicRoute() {
         height: '100%',
       }}
     >
-      {auth ? <Navigate to="/lobby" /> : <Outlet />}
+      {auth ? <Navigate to="/chat" /> : <Outlet />}
     </Box>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import Lobby from './Lobby.jsx';
 import Chat from './Chat.jsx';
+import Messages from './Messages.jsx';
 
 function MessageCenter({ title }) {
   const logout = () => {
@@ -12,6 +12,7 @@ function MessageCenter({ title }) {
     <Box
       component="div"
       // border="solid"
+
       sx={{
         // display: 'flex',
         // justifyContent: 'center',
@@ -45,8 +46,8 @@ function MessageCenter({ title }) {
         >
           <Box sx={{ height: '100%' }}>
             <Typography align="center" variant="h5" component="h5">{title}</Typography>
-            {(title === 'lobby') && <Lobby />}
             {(title === 'chat') && <Chat />}
+            {(title === 'messages') && <Messages />}
           </Box>
         </Box>
       </Box>

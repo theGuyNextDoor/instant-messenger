@@ -15,8 +15,8 @@ function App() {
             <Route path="/sign-up" element={<Login title="sign up" />} />
           </Route>
           <Route element={<PrivateRoute />}>
-            <Route path="/lobby" element={<MessageCenter title="lobby" />} />
-            <Route path="/chat/:id" element={<MessageCenter title="chat" />} />
+            <Route path="/chat" element={<MessageCenter title="chat" />} />
+            <Route path="/messages/:id" element={<MessageCenter title="messages" />} />
           </Route>
         </Routes>
       </Router>
