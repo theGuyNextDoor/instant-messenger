@@ -32,31 +32,43 @@ function MessageCenter({ title }) {
   };
 
   return (
-    <Grid
-      container
-      direction="column"
-      style={{ height: '100%' }}
-
-      border="solid"
-    >
-      <Grid item align="right">
-        <Button onClick={logout}>Logout</Button>
-      </Grid>
-
-      <Grid
-        item
-        container
-        direction="column"
-        border="solid"
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          width: '100%',
+          marginBottom: 4,
+        }}
       >
-        <Grid item>
-          <Typography align="center" variant="h5" component="h5">{title}</Typography>
-        </Grid>
+        <Button onClick={logout}>Logout</Button>
+      </Box>
 
-        {(title === 'chat') && <Chat />}
-        {(title === 'messages') && <Messages />}
-      </Grid>
-    </Grid>
+      <Box
+        sx={{
+          width: '50%',
+          height: '60%',
+        }}
+      >
+        <Box sx={{ marginBottom: 3 }}>
+          <Typography align="center" variant="h5" component="h5">{title}</Typography>
+        </Box>
+
+        <Grid
+          container
+          direction="column"
+          backgroundColor="gray"
+          sx={{ height: '100%', padding: 2, overflow: 'auto' }}
+        >
+
+          <Grid item>
+            {(title === 'chat') && <Chat />}
+            {(title === 'messages') && <Messages />}
+          </Grid>
+
+        </Grid>
+      </Box>
+    </>
   );
 }
 
