@@ -5,9 +5,14 @@ const UserContext = createContext();
 export const useUser = () => useContext(UserContext);
 
 export function UserProvider({ children }) {
+  const [user, setUser] = useState({});
+
+  const stageUser = (obj) => {
+    setUser(obj);
+  };
 
   return (
-    <UserContext.Provider value={{ user, stageUser, unstageUser }}>
+    <UserContext.Provider value={{ user, stageUser }}>
       {children}
     </UserContext.Provider>
   );

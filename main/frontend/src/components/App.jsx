@@ -1,40 +1,25 @@
 import React from 'react';
-import { Container, Box } from '@mui/material';
+import { Container } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useLogin } from '../context/LoginManager.jsx';
-import SignIn from './SignIn.jsx';
-import SignUp from './SignUp.jsx';
+import { PublicRoute, PrivateRoute } from './ProtectedRoute.jsx';
+import Login from './Login.jsx';
 import MessageCenter from './MessageCenter.jsx';
 
 function App() {
-  const { user } = useLogin();
-
   return (
     <Container style={{ height: '100%' }}>
-      <Box
-        component="div"
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          height: '100%',
-          border: 'solid',
-        }}
-      >
-        <Router>
-          <Routes>
-            {user.online ? (
-              <Route path="/" element={<MessageCenter />} />
-            ) : (
-              <>
-                <Route exact path="/" element={<SignIn />} />
-                <Route path="/sign-up" element={<SignUp />} />
-              </>
-            )}
-          </Routes>
-        </Router>
-      </Box>
+      <Router>
+        <Routes>
+          <Route element={<PublicRoute />}>
+            <Route path="/" element={<Login title="sign in" />} />
+            <Route path="/sign-up" element={<Login title="sign up" />} />
+          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/lobby" element={<MessageCenter title="lobby" />} />
+            <Route path="/chat/:id" element={<MessageCenter title="chat" />} />
+          </Route>
+        </Routes>
+      </Router>
     </Container>
   );
 }
