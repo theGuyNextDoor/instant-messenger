@@ -1,15 +1,23 @@
-from urllib.request import Request
+from tokenize import group
 from django import http
 from django.shortcuts import render
-from rest_framework import generics, views, status
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import User
+from .models import *
 from .serializers import *
 
 class UsersView(generics.ListAPIView):
   queryset = User.objects.all()
-  serializer_class = UserSerializer
+  serializer_class = UserViewSerializer
+
+class ConversationView(generics.ListAPIView):
+  queryset = Conversation.objects.all()
+  serializer_class = ConversationViewSerializer
+
+class MessageView(generics.ListAPIView):
+  queryset = Message.objects.all()
+  serializer_class = MessageViewSerializer
 
 class CurrentSessionKey(APIView):
   def get(self, request, format=None):
@@ -19,6 +27,7 @@ class CurrentSessionKey(APIView):
     queryset = User.objects.filter(session_key=self.request.session.session_key)
 
     if queryset.exists() and queryset[0].session_key == self.request.session.session_key:
+
       user = queryset[0]
       data = {
         'id': user.id,
@@ -31,7 +40,9 @@ class CurrentSessionKey(APIView):
       }
 
       return Response(data, status=status.HTTP_200_OK)
-    return Response({ 'message': 'has session key' }, status=status.HTTP_200_OK)
+    if self.request.session.session_key:
+      return Response({'message': 'session key created'}, status=status.HTTP_204_NO_CONTENT)
+    return Response({'message': 'could not create session key'}, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateUser(APIView):
   serializer_class = CreateUserSerializer
@@ -103,7 +114,8 @@ class Logout(APIView):
         user.save(update_fields=['session_key', 'online', 'current_page'])
 
         return Response ({'success': 'Logged out'}, status=status.HTTP_200_OK)
-    return Response({ 'bad request': 'User not found' }, status=status.HTTP_400_BAD_REQUEST)
+      return Response({ 'error': 'User not found' }, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdatePage(APIView):
   serializer_class = UpdatePageSerializer
@@ -123,10 +135,21 @@ class UpdatePage(APIView):
         user.save(update_fields=['current_page'])
 
         return Response({'success': 'Page saved'}, status=status.HTTP_200_OK)
-    return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+      return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
-class Chat(APIView):
+class GetConversation(APIView):
   pass
 
-class Messages(APIView):
-  pass
+class GetMessage(APIView):
+  serializer_class = ConversationIdSerializer
+
+  def get(self, request, format=None):
+    serializer = self.serializer_class(data=request.data)
+
+    if serializer.is_valid():
+      id = serializer.data.get('id')
+      messages = Message.objects.filter(conversation_id=id).values('conversation_id', 'user_id', 'text')
+
+      return Response(messages, status=status.HTTP_200_OK)
+    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)

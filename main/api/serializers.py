@@ -1,12 +1,26 @@
 from rest_framework import serializers
-from .models import User
+from .models import Conversation, Message, User
 
-class UserSerializer(serializers.ModelSerializer):
+class UserViewSerializer(serializers.ModelSerializer):
   id = serializers.IntegerField()
 
   class Meta:
     model = User
-    fields = ['id', 'session_key', 'username', 'first_name', 'last_name', 'email', 'password', 'online', 'current_page']
+    fields = '__all__'
+
+class ConversationViewSerializer(serializers.ModelSerializer):
+  # id = serializers.IntegerField()
+
+  class Meta:
+    model = Conversation
+    fields = '__all__'
+
+class MessageViewSerializer(serializers.ModelSerializer):
+  id = serializers.IntegerField()
+
+  class Meta:
+    model = Message
+    fields = '__all__'
 
 class CreateUserSerializer(serializers.ModelSerializer):
   class Meta:
@@ -26,3 +40,18 @@ class UpdatePageSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = ['id', 'current_page']
+
+class UserIdSerializer(serializers.ModelSerializer):
+  id = serializers.IntegerField()
+
+  class Meta:
+    model = User
+    fields = ['id']
+
+
+class ConversationIdSerializer(serializers.ModelSerializer):
+  id = serializers.IntegerField()
+
+  class Meta:
+    model = Conversation
+    fields = ['id']
