@@ -34,7 +34,7 @@ class CurrentSessionKey(APIView):
     return Response({ 'message': 'has session key' }, status=status.HTTP_200_OK)
 
 class CreateUser(APIView):
-  serializer_class = UserSerializer
+  serializer_class = CreateUserSerializer
 
   def post(self, request, format=None):
     if not self.request.session.exists(self.request.session.session_key):
@@ -65,28 +65,20 @@ class GetUser(APIView):
 
     if queryset.exists():
       user = queryset[0]
-      username = user.username
-      first = user.first_name
-      last = user.first_name
-      page = user.current_page
 
-      if user.session_key != self.request.session.session_key:
-        user.session_key = self.request.session.session_key
-        user.online = True
-        user.save(update_fields=['session_key', 'online'])
-      else:
-        user.online = True
-        user.save(update_fields=['online'])
+      user.session_key = self.request.session.session_key
+      user.online = True
+      user.save(update_fields=['session_key', 'online'])
 
       data = {
-        'username': username,
-        'firstName': first,
-        'lastName': last,
-        'email': email,
+        'id': user.id,
+        'username': user.username,
+        'firstName': user.first_name,
+        'lastName': user.last_name,
+        'email': user.email,
         'online': True,
-        'page': page,
+        'page': user.current_page
       }
-
 
       return Response(data, status=status.HTTP_200_OK)
     return Response({ 'error': 'Incorrect email or password' }, status=status.HTTP_401_UNAUTHORIZED)
@@ -99,6 +91,7 @@ class Logout(APIView):
 
     if serializer.is_valid():
       id = serializer.data.get('id')
+      page = serializer.data.get('current_page')
 
       queryset = User.objects.filter(id=id)
 
@@ -106,7 +99,7 @@ class Logout(APIView):
         user = queryset[0]
         user.session_key = None
         user.online = False
-        user.current_page = None
+        user.current_page = page
         user.save(update_fields=['session_key', 'online', 'current_page'])
 
         return Response ({'success': 'Logged out'}, status=status.HTTP_200_OK)
@@ -125,7 +118,6 @@ class UpdatePage(APIView):
       queryset = User.objects.filter(id=id)
 
       if queryset.exists():
-        print(page)
         user = queryset[0]
         user.current_page = page
         user.save(update_fields=['current_page'])

@@ -3,20 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Card, Typography } from '@mui/material';
 import { useUser } from '../context/UserManager.jsx';
 
-const data = [
-  { id: 0, rcpt: 'AYE YO' },
-  { id: 1, rcpt: 'bigtim' },
-  { id: 2, rcpt: 'someone' },
-  { id: 3, rcpt: 'someone else' },
-  { id: 4, rcpt: 'bigtim' },
-  { id: 5, rcpt: 'someone' },
-  { id: 6, rcpt: 'someone else' },
-  { id: 7, rcpt: 'bigtim' },
-  { id: 8, rcpt: 'someone' },
-  { id: 9, rcpt: 'someone else' },
-  { id: 10, rcpt: 'bigtim' },
-  { id: 11, rcpt: 'someone' },
-  { id: 12, rcpt: 'someone else' },
+const conversationsData = [
+  { id: 0, name: 'AYE YO, Big Tim, MasterMind, AYE YO, Big Tim, MasterMind, AYE YO, Big Tim, MasterMind', recepients: ['AYE YO'] },
+  { id: 1, name: 'Squad', recepients: ['AYE YO', 'Big Tim', 'MasterMind'] },
+  { id: 2, name: 'BettyBoop', recepients: ['BettyBoop'] },
+  { id: 3, name: 'FAM', recepients: ['George', 'Sam', 'Kevin'] },
+
 ];
 
 function Chat() {
@@ -40,8 +32,8 @@ function Chat() {
       });
   };
 
-  const recipients = data.map((recipient) => {
-    const { id, rcpt } = recipient;
+  const feed = conversationsData.map((conversation) => {
+    const { id, name } = conversation;
 
     return (
       <Card
@@ -49,18 +41,20 @@ function Chat() {
         variant="outlined"
         onClick={() => runNavigate(`/messages/${id}`)}
         sx={{
-          height: 60,
+          display: 'flex',
+          alignItems: 'center',
+          padding: 2,
           marginBottom: 3,
         }}
       >
-        <Typography>{rcpt}</Typography>
+        <Typography>{name}</Typography>
       </Card>
     );
   });
 
   return (
     <Box>
-      {recipients}
+      {feed}
     </Box>
   );
 }

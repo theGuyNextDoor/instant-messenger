@@ -39,7 +39,7 @@ function Login({ title }) {
         } else {
           UserManager.stageUser(data);
           LoginManager.authenticate(true);
-          // runNavigate('/chat');
+          runNavigate('/chat');
         }
       })
       .catch((err) => console.log(err));
@@ -57,7 +57,6 @@ function Login({ title }) {
         last_name: LoginManager.signUpInfo.lastName,
         email: LoginManager.signUpInfo.email,
         password: LoginManager.signUpInfo.password,
-        online: true,
       }),
     };
 
@@ -73,7 +72,7 @@ function Login({ title }) {
             online: true,
             page: '/chat',
           });
-          // runNavigate('/chat');
+          runNavigate('/chat');
         } else {
           console.log(data.err); // ALERT MESSAGE
         }
