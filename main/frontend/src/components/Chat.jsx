@@ -1,6 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { Box, Card, Typography } from '@mui/material';
+import { useUser } from '../context/UserManager.jsx';
 
 const data = [
   { id: 0, rcpt: 'AYE YO' },
@@ -19,10 +20,24 @@ const data = [
 ];
 
 function Chat() {
+  const { user } = useUser();
   const navigate = useNavigate();
 
   const runNavigate = (path) => {
-    navigate(path);
+    const options = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: user.id, current_page: path }),
+    };
+
+    fetch('/api/update-page', options)
+      .then((response) => {
+        if (response.ok) {
+          navigate(path);
+        } else {
+          console.log('Sorry, something went wrong'); // ALERT MESSAGE
+        }
+      });
   };
 
   const recipients = data.map((recipient) => {

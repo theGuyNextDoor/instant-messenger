@@ -13,48 +13,28 @@ function Messages({ runNavigate }) {
     const { id, sender, text } = msg;
     if (sender === 'tim') {
       return (
-        <Box border="solid">
-          <Card
-            key={id}
-            variant="outlined"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              height: 50,
-              paddingLeft: 10,
-              paddingRight: 10,
-              marginBottom: 10,
-            }}
-          >
-            <Typography>{text}</Typography>
-          </Card>
+        <Box
+          key={id}
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex_end',
+          }}
+        >
+          <Typography>{text}</Typography>
         </Box>
       );
     }
     return (
-      <Card
+      <Box
         key={id}
-        variant="outlined"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 50,
-          paddingLeft: 10,
-          paddingRight: 10,
-          marginBottom: 10,
-        }}
       >
         <Typography>{text}</Typography>
-      </Card>
+      </Box>
     );
   });
 
   return (
-    <Box sx={{
-      flex: 1,
-    }}
-    >
+    <Box>
       {messages}
     </Box>
   );

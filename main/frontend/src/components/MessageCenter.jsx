@@ -13,10 +13,7 @@ function MessageCenter({ title }) {
     const options = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: UserManager.user.id,
-        online: false,
-      }),
+      body: JSON.stringify({ id: UserManager.user.id }),
     };
 
     fetch('/api/logout', options)

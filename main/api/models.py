@@ -9,7 +9,8 @@ class User(models.Model):
   last_name = models.CharField(max_length=20)
   email = models.CharField(max_length=50, unique=True)
   password = models.CharField(max_length=20)
-  online = models.BooleanField(default=False)
+  online = models.BooleanField(default=True)
+  current_page = models.CharField(max_length=30, default='/chat')
 
 class Chat(models.Model):
   type = models.IntegerField(default=1)

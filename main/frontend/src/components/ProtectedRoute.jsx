@@ -2,13 +2,14 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { Outlet, Navigate } from 'react-router-dom';
 import { useLogin } from '../context/LoginManager.jsx';
+import { useUser } from '../context/UserManager.jsx';
 
 export function PublicRoute() {
   const { auth } = useLogin();
+  const { user } = useUser();
 
   return (
     <Box
-      component="div"
       sx={{
         display: 'flex',
         justifyContent: 'center',
@@ -17,7 +18,7 @@ export function PublicRoute() {
         height: '100%',
       }}
     >
-      {auth ? <Navigate to="/chat" /> : <Outlet />}
+      {!auth ? <Outlet /> : <Navigate to={user.page} />}
     </Box>
   );
 }

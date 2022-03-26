@@ -8,13 +8,7 @@ import SignUp from './SignUp.jsx';
 
 function Login({ title }) {
   const [errMsg, setErrMsg] = useState('');
-  const {
-    authenticate,
-    signInInfo,
-    resetSignInCredentials,
-    signUpInfo,
-    resetSignUpCredentials,
-  } = useLogin();
+  const LoginManager = useLogin();
   const UserManager = useUser();
   const navigate = useNavigate();
 
@@ -28,8 +22,8 @@ function Login({ title }) {
       .then((data) => {
         if (Object.keys(data).length > 1) {
           UserManager.stageUser(data);
-          authenticate(true);
-          runNavigate('/chat');
+          LoginManager.authenticate(true);
+          runNavigate(data.page);
         }
       })
       .catch((err) => console.log(err));
@@ -37,19 +31,19 @@ function Login({ title }) {
 
   const signIn = (e) => {
     e.preventDefault();
-    fetch(`/api/sign-in/${signInInfo.email}/${signInInfo.password}`)
+    fetch(`/api/sign-in/${LoginManager.signInInfo.email}/${LoginManager.signInInfo.password}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
           console.log(data.error); // ALERT MESSAGE
         } else {
           UserManager.stageUser(data);
-          authenticate(true);
-          runNavigate('/chat');
+          LoginManager.authenticate(true);
+          // runNavigate('/chat');
         }
       })
       .catch((err) => console.log(err));
-    resetSignInCredentials();
+    LoginManager.resetSignInCredentials();
   };
 
   const signUp = (e) => {
@@ -58,11 +52,11 @@ function Login({ title }) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        username: signUpInfo.username,
-        first_name: signUpInfo.firstName,
-        last_name: signUpInfo.lastName,
-        email: signUpInfo.email,
-        password: signUpInfo.password,
+        username: LoginManager.signUpInfo.username,
+        first_name: LoginManager.signUpInfo.firstName,
+        last_name: LoginManager.signUpInfo.lastName,
+        email: LoginManager.signUpInfo.email,
+        password: LoginManager.signUpInfo.password,
         online: true,
       }),
     };
@@ -72,13 +66,14 @@ function Login({ title }) {
       .then((data) => {
         if (data.success) {
           UserManager.stageUser({
-            username: signUpInfo.username,
-            firstName: signUpInfo.firstName,
-            lastName: signUpInfo.lastName,
-            email: signUpInfo.email,
+            username: LoginManager.signUpInfo.username,
+            firstName: LoginManager.signUpInfo.firstName,
+            lastName: LoginManager.signUpInfo.lastName,
+            email: LoginManager.signUpInfo.email,
             online: true,
+            page: '/chat',
           });
-          runNavigate('/chat');
+          // runNavigate('/chat');
         } else {
           console.log(data.err); // ALERT MESSAGE
         }
@@ -86,7 +81,7 @@ function Login({ title }) {
       .catch((err) => {
         console.log(err);
       });
-    resetSignUpCredentials();
+    LoginManager.resetSignUpCredentials();
   };
 
   return (
