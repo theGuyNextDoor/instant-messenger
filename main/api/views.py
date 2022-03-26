@@ -149,7 +149,7 @@ class GetMessage(APIView):
 
     if serializer.is_valid():
       id = serializer.data.get('id')
-      messages = Message.objects.filter(conversation_id=id).values('conversation_id', 'user_id', 'text')
+      messages = Message.objects.filter(conversation_id=id).values('text', 'sent_at', 'user_id', 'conversation_id')
 
       return Response(messages, status=status.HTTP_200_OK)
     return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
