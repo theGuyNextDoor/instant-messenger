@@ -10,6 +10,6 @@ urlpatterns = [
   path('sign-in/<str:email>/<str:password>', GetUser.as_view()),
   path('logout', Logout.as_view()),
   path('update-page', UpdatePage.as_view()),
-  path('get-conversation', GetConversation.as_view()),
-  path('get-message', GetMessage.as_view()),
+  path('conversations', Conversations.as_view()),
+  path('messages', Messages.as_view()),
 ]

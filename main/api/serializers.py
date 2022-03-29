@@ -9,8 +9,6 @@ class UserViewSerializer(serializers.ModelSerializer):
     fields = '__all__'
 
 class ConversationViewSerializer(serializers.ModelSerializer):
-  # id = serializers.IntegerField()
-
   class Meta:
     model = Conversation
     fields = '__all__'

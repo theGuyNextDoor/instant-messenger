@@ -1,4 +1,3 @@
-from tokenize import group
 from django import http
 from django.shortcuts import render
 from rest_framework import generics, status
@@ -12,6 +11,10 @@ class UsersView(generics.ListAPIView):
   serializer_class = UserViewSerializer
 
 class ConversationView(generics.ListAPIView):
+  queryset = Conversation.objects.all()
+  serializer_class = ConversationViewSerializer
+
+class User_ConversationView(generics.ListAPIView):
   queryset = Conversation.objects.all()
   serializer_class = ConversationViewSerializer
 
@@ -138,10 +141,29 @@ class UpdatePage(APIView):
       return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
-class GetConversation(APIView):
-  pass
+class Conversations(APIView):
+  serializer_class = UserIdSerializer
 
-class GetMessage(APIView):
+  def get(self, request, format=None):
+    serializer = self.serializer_class(data=request.data)
+
+    if serializer.is_valid():
+      id = serializer.data.get('id')
+
+      conversations = Conversation.objects.filter(users=id).prefetch_related('users')
+
+      data = [{
+        'name': conversation.name,
+        'groupName': conversation.group_name,
+        'users': [{
+          'name': user.username
+          } for user in conversation.users.all()]
+      } for conversation in conversations]
+
+      return Response(data, status=status.HTTP_200_OK)
+    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+class Messages(APIView):
   serializer_class = ConversationIdSerializer
 
   def get(self, request, format=None):
