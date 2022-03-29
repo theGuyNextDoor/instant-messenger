@@ -4,14 +4,14 @@ import { Box, Card, Typography } from '@mui/material';
 import { useUser } from '../context/UserManager.jsx';
 
 const conversationsData = [
-  { id: 0, name: 'AYE YO, Big Tim, MasterMind, AYE YO, Big Tim, MasterMind, AYE YO, Big Tim, MasterMind', recepients: ['AYE YO'] },
-  { id: 1, name: 'Squad', recepients: ['AYE YO', 'Big Tim', 'MasterMind'] },
-  { id: 2, name: 'BettyBoop', recepients: ['BettyBoop'] },
-  { id: 3, name: 'FAM', recepients: ['George', 'Sam', 'Kevin'] },
+  { id: 0, groupName: null, users: ['AYE YO', 'Big Tim', 'MasterMind', 'AYE YO', 'Big Tim', 'MasterMind', 'AYE YO', 'Big Tim', 'MasterMind'] },
+  { id: 1, groupName: 'Squad', users: ['AYE YO', 'Big Tim', 'MasterMind'] },
+  { id: 2, groupName: null, users: ['BettyBoop'] },
+  { id: 3, groupName: 'FAM', users: ['George', 'Sam', 'Kevin'] },
 
 ];
 
-function Chat() {
+function Conversations() {
   const { user } = useUser();
   const navigate = useNavigate();
 
@@ -32,8 +32,25 @@ function Chat() {
       });
   };
 
-  const feed = conversationsData.map((conversation) => {
-    const { id, name } = conversation;
+  function makeName(arr) {
+    let nameStr = '';
+    const lastUser = arr.length - 1;
+
+    for (let i = 0; i < lastUser; i += 1) {
+      if (arr[i] !== user.username) {
+        nameStr += `${arr[i]}, `;
+      }
+    }
+    if (arr[lastUser] === user.username) {
+      return nameStr.slice(0, nameStr.length - 2);
+    }
+
+    return nameStr + arr[lastUser];
+  }
+
+  const conversations = conversationsData.map((conversation) => {
+    const { id, groupName, users } = conversation;
+    const names = makeName(users);
 
     return (
       <Card
@@ -47,16 +64,16 @@ function Chat() {
           marginBottom: 3,
         }}
       >
-        <Typography>{name}</Typography>
+        <Typography>{groupName || names}</Typography>
       </Card>
     );
   });
 
   return (
     <Box>
-      {feed}
+      {conversations}
     </Box>
   );
 }
 
-export default Chat;
+export default Conversations;

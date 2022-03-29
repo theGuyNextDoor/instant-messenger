@@ -15,7 +15,6 @@ class User(models.Model):
     return self.username + ' ' + self.email
 
 class Conversation(models.Model):
-  name = models.CharField(max_length=500, null=True, default=None)
   group_name = models.CharField(max_length=50, null=True, default=None)
   type = models.CharField(max_length=10, default='single')
   users = models.ManyToManyField(User)

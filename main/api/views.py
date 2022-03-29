@@ -153,11 +153,8 @@ class Conversations(APIView):
       conversations = Conversation.objects.filter(users=id).prefetch_related('users')
 
       data = [{
-        'name': conversation.name,
         'groupName': conversation.group_name,
-        'users': [{
-          'name': user.username
-          } for user in conversation.users.all()]
+        'recipients': [ user.username for user in conversation.users.all()]
       } for conversation in conversations]
 
       return Response(data, status=status.HTTP_200_OK)

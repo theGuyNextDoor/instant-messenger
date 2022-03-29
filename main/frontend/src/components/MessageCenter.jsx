@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Grid, Typography, Button } from '@mui/material';
 import { useUser } from '../context/UserManager.jsx';
 import { useLogin } from '../context/LoginManager.jsx';
-import Chat from './Chat.jsx';
+import Conversations from './Conversations.jsx';
 import Messages from './Messages.jsx';
 
 function MessageCenter({ title }) {
@@ -15,7 +15,7 @@ function MessageCenter({ title }) {
     const options = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: UserManager.user.id, current_page: '/chat' }),
+      body: JSON.stringify({ id: UserManager.user.id, current_page: '/conversations' }),
     };
 
     fetch('/api/logout', options)
@@ -58,8 +58,8 @@ function MessageCenter({ title }) {
         }}
       >
         <Button
-          disabled={title === 'chat' ? true : false}
-          onClick={() => runNavigate('/chat')}
+          disabled={title === 'conversations' ? true : false}
+          onClick={() => runNavigate('/conversations')}
         >
           <Typography>back</Typography>
         </Button>
@@ -84,7 +84,7 @@ function MessageCenter({ title }) {
         >
 
           <Grid>
-            {(title === 'chat') && <Chat />}
+            {(title === 'conversations') && <Conversations />}
             {(title === 'messages') && <Messages />}
           </Grid>
 
