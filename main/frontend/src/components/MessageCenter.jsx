@@ -21,7 +21,7 @@ function MessageCenter({ title }) {
     fetch('/api/logout', options)
       .then((response) => {
         if (response.ok) {
-          UserManager.stageUser({});
+          UserManager.setUser({});
           LoginManager.authenticate(false);
         } else {
           console.log('User not found'); // ALERT MESSAGE

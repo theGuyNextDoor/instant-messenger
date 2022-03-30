@@ -47,7 +47,28 @@ class CurrentSessionKey(APIView):
       return Response({'message': 'session key created'}, status=status.HTTP_204_NO_CONTENT)
     return Response({'message': 'could not create session key'}, status=status.HTTP_400_BAD_REQUEST)
 
-class CreateUser(APIView):
+class CurrentPage(APIView):
+  serializer_class = UpdatePageSerializer
+
+  def patch(self, request, format=None):
+    serializer = self.serializer_class(data=request.data)
+
+    if serializer.is_valid():
+      id = serializer.data.get('id')
+      page = serializer.data.get('current_page')
+
+      queryset = User.objects.filter(id=id)
+
+      if queryset.exists():
+        user = queryset[0]
+        user.current_page = page
+        user.save(update_fields=['current_page'])
+
+        return Response({'success': 'Page saved'}, status=status.HTTP_200_OK)
+      return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+class Sign_Up(APIView):
   serializer_class = CreateUserSerializer
 
   def post(self, request, format=None):
@@ -70,7 +91,7 @@ class CreateUser(APIView):
       return Response({'success': 'Account created'}, status=status.HTTP_201_CREATED)
     return Response({'error': 'This email is already being used'}, status=status.HTTP_400_BAD_REQUEST)
 
-class GetUser(APIView):
+class Sign_In(APIView):
   def get(self, request, email, password, format=None):
     if not self.request.session.exists(self.request.session.session_key):
       self.request.session.create()
@@ -120,55 +141,27 @@ class Logout(APIView):
       return Response({ 'error': 'User not found' }, status=status.HTTP_400_BAD_REQUEST)
     return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
-class UpdatePage(APIView):
-  serializer_class = UpdatePageSerializer
-
-  def patch(self, request, format=None):
-    serializer = self.serializer_class(data=request.data)
-
-    if serializer.is_valid():
-      id = serializer.data.get('id')
-      page = serializer.data.get('current_page')
-
-      queryset = User.objects.filter(id=id)
-
-      if queryset.exists():
-        user = queryset[0]
-        user.current_page = page
-        user.save(update_fields=['current_page'])
-
-        return Response({'success': 'Page saved'}, status=status.HTTP_200_OK)
-      return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
-
 class Conversations(APIView):
-  serializer_class = UserIdSerializer
+  def get(self, request, id, format=None):
+    conversations = Conversation.objects.filter(users=id).prefetch_related('users')
 
-  def get(self, request, format=None):
-    serializer = self.serializer_class(data=request.data)
+    data = [{
+      'id': conversation.id,
+      'groupName': conversation.group_name,
+      'recipients': [ user.username for user in conversation.users.all()]
+    } for conversation in conversations]
 
-    if serializer.is_valid():
-      id = serializer.data.get('id')
-
-      conversations = Conversation.objects.filter(users=id).prefetch_related('users')
-
-      data = [{
-        'groupName': conversation.group_name,
-        'recipients': [ user.username for user in conversation.users.all()]
-      } for conversation in conversations]
-
-      return Response(data, status=status.HTTP_200_OK)
-    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data, status=status.HTTP_200_OK)
 
 class Messages(APIView):
-  serializer_class = ConversationIdSerializer
+  def get(self, request, id, format=None):
+    messages = Message.objects.filter(conversation_id=id).select_related('user_id')
 
-  def get(self, request, format=None):
-    serializer = self.serializer_class(data=request.data)
+    data = [{
+      'id': message.id,
+      'text': message.text,
+      'sentAt': message.sent_at,
+      'sender': message.user_id.username,
+    } for message in messages]
 
-    if serializer.is_valid():
-      id = serializer.data.get('id')
-      messages = Message.objects.filter(conversation_id=id).values('text', 'sent_at', 'user_id', 'conversation_id')
-
-      return Response(messages, status=status.HTTP_200_OK)
-    return Response({'Bad Request': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(data, status=status.HTTP_200_OK)

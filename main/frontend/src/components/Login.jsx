@@ -21,7 +21,7 @@ function Login({ title }) {
       .then((response) => response.json())
       .then((data) => {
         if (Object.keys(data).length > 1) {
-          UserManager.stageUser(data);
+          UserManager.setUser(data);
           LoginManager.authenticate(true);
           runNavigate(data.page);
         }
@@ -37,9 +37,9 @@ function Login({ title }) {
         if (data.error) {
           console.log(data.error); // ALERT MESSAGE
         } else {
-          UserManager.stageUser(data);
+          UserManager.setUser(data);
           LoginManager.authenticate(true);
-          runNavigate('/chat');
+          runNavigate('/conversations');
         }
       })
       .catch((err) => console.log(err));
@@ -64,15 +64,15 @@ function Login({ title }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          UserManager.stageUser({
+          UserManager.setUser({
             username: LoginManager.signUpInfo.username,
             firstName: LoginManager.signUpInfo.firstName,
             lastName: LoginManager.signUpInfo.lastName,
             email: LoginManager.signUpInfo.email,
             online: true,
-            page: '/chat',
+            page: '/conversations',
           });
-          runNavigate('/chat');
+          runNavigate('/conversations');
         } else {
           console.log(data.err); // ALERT MESSAGE
         }
